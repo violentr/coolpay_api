@@ -2,21 +2,27 @@
 
 rubygems if RUBY_VERSION < '1.9'
 require 'rest_client'
+require_relative 'recipient'
 require 'active_support/all'
 
-class Authentication
-  BASE_URL = 'https://coolpay.herokuapp.com/api/login'
+module Authentication
+  BASE_URL = 'https://coolpay.herokuapp.com/api/'.freeze
 
   def self.authenticate
     raise MissingApiKey if has_no_credentials?
-    RestClient.post(BASE_URL, user_credentials, headers)
+    response = RestClient.post(authentication_url, user_credentials, headers)
+    JSON.parse(response.body)["token"]
+  end
+
+
+  def self.authentication_url
+    BASE_URL + 'login'
   end
 
   def self.headers
   {
     :content_type => 'application/json'
   }
-
   end
 
  private
@@ -34,8 +40,6 @@ class Authentication
   end
 
   class MissingApiKey < StandardError ; end
-
 end
 
-#auth_token = Client.authenticate
-#auth_token["token"]
+

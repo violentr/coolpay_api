@@ -1,7 +1,5 @@
 require 'webmock/rspec'
-
-ENV['TEST'] ||= 'test' 
-Dir["#{Dir.pwd}/lib/**/*.rb"].each {|file| require file }
+require_relative '../dependencies'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
